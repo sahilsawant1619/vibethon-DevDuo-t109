@@ -442,9 +442,18 @@ class DecisionTreeGame {
         if (node && node.isFinal) {
             this.endGame();
         }
+        
+        showToast('Choice made successfully!', 'success');
+    } catch (error) {
+        console.error('Error making choice:', error);
+        showToast('Error making choice. Please try again.', 'error');
     }
-    
-    updateDisplay() {
+}
+
+// ... (rest of the code remains the same)
+
+updateDisplay() {
+    try {
         const node = this.gameData[this.currentNode];
         if (!node) return;
         

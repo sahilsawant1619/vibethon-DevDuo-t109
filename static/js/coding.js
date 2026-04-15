@@ -270,13 +270,14 @@ print(f"10 / 'a': {safe_divide(10, 'a')}")`
         const code = this.codeEditor.value.trim();
         
         if (!code) {
-            this.showOutput('Please enter some code to run.', 'error');
+            showToast('Please enter some code to run.', 'error');
             return;
         }
         
         this.showLoading(true);
         this.runBtn.disabled = true;
         this.runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
+        this.runBtn.classList.add('loading');
         
         try {
             const response = await fetch('/run-code', {
@@ -287,25 +288,33 @@ print(f"10 / 'a': {safe_divide(10, 'a')}")`
                 body: JSON.stringify({ code: code })
             });
             
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const result = await response.json();
             
             if (result.output) {
                 this.showOutput(result.output, 'success');
-                // Log points update (for future implementation)
+                showToast('Code executed successfully!', 'success');
                 console.log('Code executed successfully - points update would go here');
             } else if (result.error) {
                 this.showOutput(result.error, 'error');
+                showToast(result.error, 'error');
             } else {
                 this.showOutput('Unexpected error occurred', 'error');
+                showToast('Unexpected error occurred', 'error');
             }
             
         } catch (error) {
             console.error('Error running code:', error);
             this.showOutput('Network error: Could not connect to server', 'error');
+            showToast('Network error: Could not connect to server', 'error');
         } finally {
             this.showLoading(false);
             this.runBtn.disabled = false;
             this.runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
+            this.runBtn.classList.remove('loading');
         }
     }
     
@@ -357,29 +366,6 @@ print(f"10 / 'a': {safe_divide(10, 'a')}")`
         } else {
             this.output.style.display = 'block';
         }
-    }
-    
-    showToast(message, type = 'success') {
-        // Create toast element
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.textContent = message;
-        
-        // Add to page
-        document.body.appendChild(toast);
-        
-        // Show toast
-        setTimeout(() => {
-            toast.classList.add('show');
-        }, 100);
-        
-        // Remove after 3 seconds
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => {
-                document.body.removeChild(toast);
-            }, 300);
-        }, 3000);
     }
 }
 

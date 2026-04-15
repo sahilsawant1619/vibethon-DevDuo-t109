@@ -76,19 +76,17 @@ class SpamSimulation {
     async classifyMessage() {
         const text = this.messageText.value.trim();
         
-        if (!text) {
-            this.showToast('Please enter a message to classify', 'warning');
+        if (!message) {
+            this.showToast('Please enter a message to classify.', 'warning');
             return;
         }
         
-        if (text.length > 500) {
+        if (message.length > 500) {
             this.showToast('Message is too long (max 500 characters)', 'warning');
             return;
         }
         
-        // Show loading state
         this.setLoadingState(true);
-        this.showResults();
         
         try {
             const response = await fetch('/simulation/predict', {
@@ -96,22 +94,25 @@ class SpamSimulation {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ text: text })
+                body: JSON.stringify({ text: message })
             });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
             
             const result = await response.json();
             
-            if (response.ok) {
+            if (result.prediction) {
                 this.displayResults(result);
-                this.updateStats(result);
+                this.showToast('Message classified successfully!', 'success');
             } else {
-                throw new Error(result.error || 'Classification failed');
+                this.showToast('Failed to classify message. Please try again.', 'error');
             }
             
         } catch (error) {
             console.error('Error classifying message:', error);
-            this.showToast('Error: ' + error.message, 'error');
-            this.hideResults();
+            this.showToast('Network error: Could not classify message. Please try again.', 'error');
         } finally {
             this.setLoadingState(false);
         }

@@ -77,11 +77,11 @@ class QuizManager {
     
     async generateQuiz() {
         if (!this.selectedTopic) {
-            this.showToast('Please select a topic first', 'warning');
+            showToast('Please select a topic first!', 'warning');
             return;
         }
         
-        this.setLoadingState(true);
+        this.showLoading(true);
         
         try {
             const response = await fetch('/quiz/generate', {
@@ -92,20 +92,26 @@ class QuizManager {
                 body: JSON.stringify({ topic: this.selectedTopic })
             });
             
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const result = await response.json();
             
-            if (response.ok) {
+            if (result.questions) {
                 this.currentQuestions = result.questions;
-                this.startQuiz();
+                this.displayQuestions();
+                this.startTimer();
+                showToast('Quiz generated successfully!', 'success');
             } else {
-                throw new Error(result.error || 'Failed to generate quiz');
+                showToast('Failed to generate quiz. Please try again.', 'error');
             }
             
         } catch (error) {
             console.error('Error generating quiz:', error);
-            this.showToast('Error: ' + error.message, 'error');
+            showToast('Network error: Could not generate quiz. Please try again.', 'error');
         } finally {
-            this.setLoadingState(false);
+            this.showLoading(false);
         }
     }
     
@@ -183,7 +189,7 @@ class QuizManager {
     async submitQuiz() {
         // Check if all questions are answered
         if (Object.keys(this.userAnswers).length !== this.currentQuestions.length) {
-            this.showToast('Please answer all questions', 'warning');
+            showToast('Please answer all questions', 'warning');
             return;
         }
         
@@ -197,24 +203,30 @@ class QuizManager {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    topic: this.selectedTopic,
                     answers: this.userAnswers,
-                    questions: this.currentQuestions
+                    questions: this.currentQuestions,
+                    topic: this.selectedTopic
                 })
             });
             
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const result = await response.json();
             
-            if (response.ok) {
-                this.showResults(result);
+            if (result.score !== undefined) {
+                this.displayResults(result);
                 this.updateStats(result);
+                this.saveStats();
+                showToast('Quiz submitted successfully!', 'success');
             } else {
-                throw new Error(result.error || 'Failed to submit quiz');
+                showToast('Failed to submit quiz. Please try again.', 'error');
             }
             
         } catch (error) {
             console.error('Error submitting quiz:', error);
-            this.showToast('Error: ' + error.message, 'error');
+            showToast('Network error: Could not submit quiz. Please try again.', 'error');
         } finally {
             this.setLoadingState(false);
         }

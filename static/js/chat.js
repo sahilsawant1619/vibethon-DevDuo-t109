@@ -67,6 +67,7 @@ class ChatManager {
         const message = this.messageInput.value.trim();
         
         if (!message) {
+            this.showToast('Please enter a message to send.', 'warning');
             return;
         }
         
@@ -94,30 +95,29 @@ class ChatManager {
                 body: JSON.stringify({ question: message })
             });
             
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const result = await response.json();
             
-            if (response.ok) {
-                // Hide typing indicator
-                this.hideTypingIndicator();
-                
-                // Add bot response
-                this.addMessage(result.answer, 'bot');
-                
-                // Update statistics
-                this.updateStats();
-                
-                // Award points (2 points per question)
-                this.awardPoints(2);
-                
-            } else {
-                throw new Error(result.error || 'Failed to get response');
-            }
+            // Hide typing indicator
+            this.hideTypingIndicator();
+            
+            // Add bot response
+            this.addMessage(result.answer, 'bot');
+            
+            // Update statistics
+            this.updateStats();
+            
+            // Award points (2 points per question)
+            this.awardPoints(2);
+            this.showToast('Message sent successfully!', 'success');
             
         } catch (error) {
             console.error('Error sending message:', error);
             this.hideTypingIndicator();
-            this.addMessage('Sorry, I encountered an error. Please try again.', 'bot');
-            this.showToast('Error: ' + error.message, 'error');
+            this.showToast('Failed to send message. Please try again.', 'error');
         }
     }
     
