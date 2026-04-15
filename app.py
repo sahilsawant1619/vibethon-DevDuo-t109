@@ -412,5 +412,10 @@ def leaderboard():
 def chat():
     return render_template('chat.html')
 
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
