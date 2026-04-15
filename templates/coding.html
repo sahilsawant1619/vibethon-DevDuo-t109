@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Main Content (no sidebar - base.html already has it) -->
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="welcome-section">
+        <h1>Interactive Coding Playground</h1>
+        <p>Write and execute Python code safely in your browser</p>
+    </div>
+
+    <!-- Code Editor Section -->
+    <div class="coding-section">
+        <div class="editor-container">
+            <div class="editor-header">
+                <h3>Python Code Editor</h3>
+                <div class="editor-actions">
+                    <button id="clearBtn" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                    <button id="runBtn" class="btn btn-primary btn-sm">
+                        <i class="fas fa-play"></i> Run Code
+                    </button>
+                </div>
+            </div>
+            
+            <div class="code-editor-wrapper">
+                <textarea id="codeEditor" class="code-editor" placeholder="Write your Python code here..." spellcheck="false"># Welcome to the Python Playground!
+# Try running some code examples:
+
+print("Hello, Machine Learning!")
+
+# Basic calculations
+result = 2 + 2
+print(f"2 + 2 = {result}")
+
+# List operations
+numbers = [1, 2, 3, 4, 5]
+print(f"Numbers: {numbers}")
+print(f"Sum: {sum(numbers)}")
+print(f"Average: {sum(numbers) / len(numbers)}")
+
+# Try some math operations
+import math
+print(f"Pi: {math.pi}")
+print(f"Square root of 16: {math.sqrt(16)}")
+
+# String operations
+text = "Machine Learning is fun!"
+print(f"Text: {text}")
+print(f"Length: {len(text)}")
+print(f"Uppercase: {text.upper()}")</textarea>
+            </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-container">
+            <div class="output-header">
+                <h3>Output</h3>
+                <div class="output-actions">
+                    <button id="copyOutputBtn" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+            
+            <div class="output-wrapper">
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Running code...</p>
+                </div>
+                <pre id="output" class="output-console">Your code output will appear here...</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Section -->
+    <div class="instructions-section">
+        <div class="instructions-card">
+            <h3>How to Use</h3>
+            <ul>
+                <li>Write Python code in the editor above</li>
+                <li>Click "Run Code" to execute your code</li>
+                <li>View the output in the console below</li>
+                <li>Code execution has a 3-second timeout</li>
+            </ul>
+        </div>
+        
+        <div class="instructions-card">
+            <h3>Available Features</h3>
+            <ul>
+                <li>Basic Python operations (print, variables, loops, functions)</li>
+                <li>Math operations (import math)</li>
+                <li>String operations and data structures</li>
+                <li>Exception handling and error messages</li>
+            </ul>
+        </div>
+        
+        <div class="instructions-card">
+            <h3>Security Restrictions</h3>
+            <ul>
+                <li>No file system access (os, pathlib, etc.)</li>
+                <li>No network operations (socket, requests, etc.)</li>
+                <li>No system operations (subprocess, threading, etc.)</li>
+                <li>3-second execution timeout</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Examples Section -->
+    <div class="examples-section">
+        <h3>Try These Examples</h3>
+        <div class="example-buttons">
+            <button class="example-btn" data-example="hello">
+                <i class="fas fa-comment"></i> Hello World
+            </button>
+            <button class="example-btn" data-example="math">
+                <i class="fas fa-calculator"></i> Math Operations
+            </button>
+            <button class="example-btn" data-example="lists">
+                <i class="fas fa-list"></i> List Operations
+            </button>
+            <button class="example-btn" data-example="loops">
+                <i class="fas fa-sync"></i> Loops & Conditionals
+            </button>
+            <button class="example-btn" data-example="functions">
+                <i class="fas fa-code"></i> Functions
+            </button>
+            <button class="example-btn" data-example="error">
+                <i class="fas fa-exclamation-triangle"></i> Error Handling
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Coding JavaScript -->
+<script src="{{ url_for('static', filename='js/coding.js') }}"></script>
+{% endblock %}

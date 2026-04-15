@@ -1,41 +1,505 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="learning-module">
-                <div class="coming-soon">
-                    <div class="icon-container">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h1>Advanced Module</h1>
-                    <p>This module is coming soon!</p>
-                    <div class="features-preview">
-                        <h3>What's coming in this module:</h3>
-                        <ul>
-                            <li>Deep Learning Architectures</li>
-                            <li>Neural Network Optimization</li>
-                            <li>Computer Vision Applications</li>
-                            <li>Natural Language Processing</li>
-                            <li>Reinforcement Learning</li>
-                            <li>Model Deployment & MLOps</li>
-                        </ul>
-                    </div>
-                    <div class="unlock-info">
-                        <p><i class="fas fa-lock"></i> Complete Beginner and Intermediate modules to unlock this content</p>
-                    </div>
-                    <div class="action-buttons">
-                        <a href="/learn/beginner" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left"></i>
-                            Back to Beginner
-                        </a>
-                        <a href="/learn/intermediate" class="btn btn-primary">
-                            View Intermediate
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
+<div class="dashboard-container">
+    <div class="welcome-section">
+        <h1>Advanced Machine Learning</h1>
+        <p>Master deep learning: Neural Networks, Backpropagation, and CNNs</p>
+    </div>
+
+    <div class="learning-content">
+        <!-- Navigation Tabs -->
+        <div class="learning-tabs">
+            <button class="tab-btn active" onclick="showTab('neural-networks')">
+                <i class="fas fa-brain"></i> Neural Networks
+            </button>
+            <button class="tab-btn" onclick="showTab('backpropagation')">
+                <i class="fas fa-sync-alt"></i> Backpropagation
+            </button>
+            <button class="tab-btn" onclick="showTab('cnns')">
+                <i class="fas fa-image"></i> CNNs
+            </button>
+        </div>
+
+        <!-- Neural Networks Tab -->
+        <div id="neural-networks" class="tab-content active">
+            <div class="content-section">
+                <h2>Neural Networks from Scratch</h2>
+                <p>Build neural networks from first principles and understand the mathematics behind deep learning.</p>
+                
+                <div class="concept-card">
+                    <h3>Understanding the Perceptron</h3>
+                    <p>The perceptron is the fundamental building block of neural networks. It's a linear classifier that learns weights to make predictions.</p>
+                    
+                    <div class="code-example">
+                        <h4>Perceptron Implementation</h4>
+                        <pre><code>import numpy as np
+
+class Perceptron:
+    def __init__(self, learning_rate=0.01, epochs=1000):
+        self.learning_rate = learning_rate
+        self.epochs = epochs
+        self.weights = None
+        self.bias = None
+    
+    def fit(self, X, y):
+        # Initialize weights and bias
+        n_samples, n_features = X.shape
+        self.weights = np.zeros(n_features)
+        self.bias = 0
+        
+        # Training loop
+        for epoch in range(self.epochs):
+            for i in range(n_samples):
+                # Forward pass
+                linear_output = np.dot(X[i], self.weights) + self.bias
+                prediction = 1 if linear_output > 0 else 0
+                
+                # Update weights
+                error = y[i] - prediction
+                self.weights += self.learning_rate * error * X[i]
+                self.bias += self.learning_rate * error
+    
+    def predict(self, X):
+        linear_output = np.dot(X, self.weights) + self.bias
+        return np.where(linear_output > 0, 1, 0)
+
+# Example usage
+X = np.array([[1, 1], [1, 0], [0, 1], [0, 0]])
+y = np.array([1, 1, 1, 0])  # AND gate
+
+perceptron = Perceptron()
+perceptron.fit(X, y)
+predictions = perceptron.predict(X)
+print(f"Predictions: {predictions}")</code></pre>
                     </div>
                 </div>
+
+                <div class="concept-card">
+                    <h3>Multi-Layer Perceptron (MLP)</h3>
+                    <p>Stack multiple perceptrons to create powerful non-linear models. The magic happens with activation functions and hidden layers.</p>
+                    
+                    <div class="mlp-visual">
+                        <div class="layer">
+                            <h4>Input Layer</h4>
+                            <p>Raw features fed into the network</p>
+                        </div>
+                        <div class="layer">
+                            <h4>Hidden Layers</h4>
+                            <p>Non-linear transformations using activation functions</p>
+                        </div>
+                        <div class="layer">
+                            <h4>Output Layer</h4>
+                            <p>Final predictions or classifications</p>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <h4>Simple MLP Implementation</h4>
+                        <pre><code>class MLP:
+    def __init__(self, input_size, hidden_size, output_size):
+        # Initialize weights with random values
+        self.W1 = np.random.randn(input_size, hidden_size)
+        self.b1 = np.zeros(hidden_size)
+        self.W2 = np.random.randn(hidden_size, output_size)
+        self.b2 = np.zeros(output_size)
+    
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+    
+    def sigmoid_derivative(self, x):
+        return x * (1 - x)
+    
+    def forward(self, X):
+        # Forward propagation
+        self.z1 = np.dot(X, self.W1) + self.b1
+        self.a1 = self.sigmoid(self.z1)
+        self.z2 = np.dot(self.a1, self.W2) + self.b2
+        self.a2 = self.sigmoid(self.z2)
+        return self.a2
+    
+    def predict(self, X):
+        predictions = self.forward(X)
+        return np.where(predictions > 0.5, 1, 0)</code></pre>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>Activation Functions</h3>
+                    <p>Activation functions introduce non-linearity, allowing neural networks to learn complex patterns.</p>
+                    
+                    <div class="activation-functions">
+                        <div class="activation-func">
+                            <h4>Sigmoid</h4>
+                            <code>sigmoid(x) = 1 / (1 + e^(-x))</code>
+                            <p>Range: (0, 1). Good for binary classification.</p>
+                        </div>
+                        <div class="activation-func">
+                            <h4>ReLU</h4>
+                            <code>ReLU(x) = max(0, x)</code>
+                            <p>Range: [0, +inf). Most popular for hidden layers.</p>
+                        </div>
+                        <div class="activation-func">
+                            <h4>Tanh</h4>
+                            <code>tanh(x) = (e^x - e^(-x)) / (e^x + e^(-x))</code>
+                            <p>Range: (-1, 1). Zero-centered, good for hidden layers.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="practice-section">
+                    <h3>Practice Exercise</h3>
+                    <div class="exercise-box">
+                        <p><strong>Exercise:</strong> Why can't a single perceptron solve the XOR problem? What's the minimum number of layers needed?</p>
+                        <button class="btn btn-secondary" onclick="toggleHint('hint1')">Show Hint</button>
+                        <div id="hint1" class="hint" style="display: none;">
+                            <p>A single perceptron can only learn linearly separable patterns. XOR is not linearly separable. You need at least one hidden layer (2-layer network) to solve XOR. This is why multi-layer networks are so powerful!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backpropagation Tab -->
+        <div id="backpropagation" class="tab-content">
+            <div class="content-section">
+                <h2>Backpropagation Algorithm</h2>
+                <p>The engine that trains neural networks by efficiently computing gradients and updating weights.</p>
+                
+                <div class="concept-card">
+                    <h3>The Chain Rule in Action</h3>
+                    <p>Backpropagation uses the chain rule to compute how each weight affects the final error.</p>
+                    
+                    <div class="backprop-visual">
+                        <div class="step">
+                            <h4>Step 1: Forward Pass</h4>
+                            <p>Compute outputs layer by layer</p>
+                            <code>a^(l) = f(z^(l)) where z^(l) = W^(l) * a^(l-1) + b^(l)</code>
+                        </div>
+                        <div class="step">
+                            <h4>Step 2: Compute Error</h4>
+                            <p>Calculate loss at the output</p>
+                            <code>L = 1/2 * sum((y_true - y_pred)²)</code>
+                        </div>
+                        <div class="step">
+                            <h4>Step 3: Backward Pass</h4>
+                            <p>Propagate error gradients backward</p>
+                            <code>delta^(l) = (W^(l+1))^T * delta^(l+1) * f'(z^(l))</code>
+                        </div>
+                        <div class="step">
+                            <h4>Step 4: Update Weights</h4>
+                            <p>Adjust weights using gradients</p>
+                            <code>W^(l) = W^(l) - learning_rate * delta^(l) * (a^(l-1))^T</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>Gradient Descent Variants</h3>
+                    <p>Different ways to update weights based on computed gradients.</p>
+                    
+                    <div class="gradient-variants">
+                        <div class="variant">
+                            <h4>Batch Gradient Descent</h4>
+                            <p>Uses entire dataset for each update. Stable but slow for large datasets.</p>
+                            <code>W = W - learning_rate * grad(L, W)</code>
+                        </div>
+                        <div class="variant">
+                            <h4>Stochastic Gradient Descent</h4>
+                            <p>Updates after each sample. Fast but noisy convergence.</p>
+                            <code>W = W - learning_rate * grad(L_i, W)</code>
+                        </div>
+                        <div class="variant">
+                            <h4>Mini-Batch GD</h4>
+                            <p>Best of both worlds. Uses small batches (32-256 samples).</p>
+                            <code>W = W - learning_rate * grad(L_batch, W)</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>Complete Backpropagation Implementation</h3>
+                    <div class="code-example">
+                        <pre><code>class NeuralNetwork:
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.01):
+        self.W1 = np.random.randn(input_size, hidden_size)
+        self.b1 = np.zeros(hidden_size)
+        self.W2 = np.random.randn(hidden_size, output_size)
+        self.b2 = np.zeros(output_size)
+        self.learning_rate = learning_rate
+    
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+    
+    def sigmoid_derivative(self, x):
+        return x * (1 - x)
+    
+    def forward(self, X):
+        # Forward pass through network
+        self.z1 = np.dot(X, self.W1) + self.b1
+        self.a1 = self.sigmoid(self.z1)
+        self.z2 = np.dot(self.a1, self.W2) + self.b2
+        self.a2 = self.sigmoid(self.z2)
+        return self.a2
+    
+    def backward(self, X, y, output):
+        m = X.shape[0]
+        
+        # Calculate gradients
+        d_output = (output - y) * self.sigmoid_derivative(output)
+        d_hidden = d_output.dot(self.W2.T) * self.sigmoid_derivative(self.a1)
+        
+        # Update weights
+        self.W2 -= self.learning_rate * self.a1.T.dot(d_output) / m
+        self.b2 -= self.learning_rate * np.sum(d_output, axis=0) / m
+        self.W1 -= self.learning_rate * X.T.dot(d_hidden) / m
+        self.b1 -= self.learning_rate * np.sum(d_hidden, axis=0) / m
+    
+    def train(self, X, y, epochs):
+        for epoch in range(epochs):
+            output = self.forward(X)
+            self.backward(X, y, output)
+            
+            if epoch % 1000 == 0:
+                loss = np.mean((y - output) ** 2)
+                print(f"Epoch {epoch}, Loss: {loss:.4f}")</code></pre>
+                    </div>
+                </div>
+
+                <div class="practice-section">
+                    <h3>Practice Exercise</h3>
+                    <div class="exercise-box">
+                        <p><strong>Exercise:</strong> If you double the learning rate, what might happen to the training process? What if you make it too small?</p>
+                        <button class="btn btn-secondary" onclick="toggleHint('hint2')">Show Hint</button>
+                        <div id="hint2" class="hint" style="display: none;">
+                            <p>Too large learning rate: training may diverge or oscillate around minimum. Too small learning rate: very slow convergence, might get stuck in local minima. The sweet spot depends on your specific problem and architecture.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CNNs Tab -->
+        <div id="cnns" class="tab-content">
+            <div class="content-section">
+                <h2>Convolutional Neural Networks</h2>
+                <p>Specialized neural networks for image processing and computer vision tasks.</p>
+                
+                <div class="concept-card">
+                    <h3>Convolution Operation</h3>
+                    <p>The core operation that makes CNNs special. Apply filters to detect patterns like edges, textures, and shapes.</p>
+                    
+                    <div class="cnn-components">
+                        <div class="component">
+                            <h4>Convolution Layer</h4>
+                            <p>Applies learnable filters to input. Each filter detects specific patterns.</p>
+                            <div class="code-example">
+                                <pre><code>def convolution(image, kernel):
+    # Simple 2D convolution
+    height, width = image.shape
+    k_height, k_width = kernel.shape
+    
+    # Calculate output size
+    out_height = height - k_height + 1
+    out_width = width - k_width + 1
+    output = np.zeros((out_height, out_width))
+    
+    # Perform convolution
+    for i in range(out_height):
+        for j in range(out_width):
+            region = image[i:i+k_height, j:j+k_width]
+            output[i, j] = np.sum(region * kernel)
+    
+    return output
+
+# Example edge detection kernel
+edge_detector = np.array([
+    [-1, -1, -1],
+    [-1,  8, -1],
+    [-1, -1, -1]
+])</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="component">
+                            <h4>Pooling Layer</h4>
+                            <p>Reduces spatial dimensions while preserving important features.</p>
+                            <div class="code-example">
+                                <pre><code>def max_pooling(image, size=2, stride=2):
+    height, width = image.shape
+    out_height = (height - size) // stride + 1
+    out_width = (width - size) // stride + 1
+    output = np.zeros((out_height, out_width))
+    
+    for i in range(out_height):
+        for j in range(out_width):
+            region = image[i*stride:i*stride+size, 
+                         j*stride:j*stride+size]
+            output[i, j] = np.max(region)
+    
+    return output</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>CNN Architecture</h3>
+                    <p>Typical CNN architecture for image classification.</p>
+                    
+                    <div class="cnn-architecture">
+                        <div class="arch-layer">
+                            <h4>Input (224x224x3)</h4>
+                            <p>RGB Image</p>
+                        </div>
+                        <div class="arch-arrow">-></div>
+                        <div class="arch-layer">
+                            <h4>Conv + ReLU</h4>
+                            <p>64 filters, 3x3</p>
+                        </div>
+                        <div class="arch-arrow">-></div>
+                        <div class="arch-layer">
+                            <h4>Max Pool</h4>
+                            <p>2x2, stride 2</p>
+                        </div>
+                        <div class="arch-arrow">-></div>
+                        <div class="arch-layer">
+                            <h4>Conv + ReLU</h4>
+                            <p>128 filters, 3x3</p>
+                        </div>
+                        <div class="arch-arrow">-></div>
+                        <div class="arch-layer">
+                            <h4>Max Pool</h4>
+                            <p>2x2, stride 2</p>
+                        </div>
+                        <div class="arch-arrow">-></div>
+                        <div class="arch-layer">
+                            <h4>Flatten</h4>
+                            <p>Vectorize features</p>
+                        </div>
+                        <div class="arch-arrow">-></div>
+                        <div class="arch-layer">
+                            <h4>Fully Connected</h4>
+                            <p>Classification</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>Key CNN Concepts</h3>
+                    <div class="cnn-concepts">
+                        <div class="concept">
+                            <h4>Local Receptive Fields</h4>
+                            <p>Each neuron only sees a small region of the input, preserving spatial information.</p>
+                        </div>
+                        <div class="concept">
+                            <h4>Parameter Sharing</h4>
+                            <p>Same filter is used across entire image, reducing parameters dramatically.</p>
+                        </div>
+                        <div class="concept">
+                            <h4>Translation Invariance</h4>
+                            <p>Pooling makes the network robust to small translations of features.</p>
+                        </div>
+                        <div class="concept">
+                            <h4>Feature Hierarchy</h4>
+                            <p>Early layers detect edges, middle layers detect shapes, deep layers detect objects.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>Simple CNN Implementation</h3>
+                    <div class="code-example">
+                        <pre><code>class SimpleCNN:
+    def __init__(self):
+        # Initialize random filters (in practice, these are learned)
+        self.conv1_filters = np.random.randn(8, 3, 3, 3) * 0.1
+        self.conv2_filters = np.random.randn(16, 8, 3, 3) * 0.1
+        self.fc_weights = np.random.randn(16 * 5 * 5, 10) * 0.1
+    
+    def relu(self, x):
+        return np.maximum(0, x)
+    
+    def conv_forward(self, x, filters):
+        # Simplified convolution forward pass
+        batch_size, height, width, channels = x.shape
+        n_filters, f_channels, f_height, f_width = filters.shape
+        
+        out_height = height - f_height + 1
+        out_width = width - f_width + 1
+        output = np.zeros((batch_size, out_height, out_width, n_filters))
+        
+        for i in range(batch_size):
+            for f in range(n_filters):
+                for h in range(out_height):
+                    for w in range(out_width):
+                        region = x[i, h:h+f_height, w:w+f_width, :]
+                        output[i, h, w, f] = np.sum(region * filters[f])
+        
+        return self.relu(output)
+    
+    def max_pool_forward(self, x, size=2):
+        batch_size, height, width, channels = x.shape
+        out_height = height // size
+        out_width = width // size
+        output = np.zeros((batch_size, out_height, out_width, channels))
+        
+        for i in range(batch_size):
+            for c in range(channels):
+                for h in range(out_height):
+                    for w in range(out_width):
+                        region = x[i, h*2:h*2+2, w*2:w*2+2, c]
+                        output[i, h, w, c] = np.max(region)
+        
+        return output
+    
+    def forward(self, x):
+        # Forward pass through CNN
+        conv1 = self.conv_forward(x, self.conv1_filters)
+        pool1 = self.max_pool_forward(conv1)
+        conv2 = self.conv_forward(pool1, self.conv2_filters)
+        pool2 = self.max_pool_forward(conv2)
+        
+        # Flatten and classify
+        flattened = pool2.reshape(pool2.shape[0], -1)
+        logits = np.dot(flattened, self.fc_weights)
+        
+        return logits</code></pre>
+                    </div>
+                </div>
+
+                <div class="practice-section">
+                    <h3>Practice Exercise</h3>
+                    <div class="exercise-box">
+                        <p><strong>Exercise:</strong> Why do CNNs work so well for images but not as well for text data? What's the key difference?</p>
+                        <button class="btn btn-secondary" onclick="toggleHint('hint3')">Show Hint</button>
+                        <div id="hint3" class="hint" style="display: none;">
+                            <p>CNNs exploit spatial locality and translation invariance in images. Text has sequential structure and word order matters more than spatial position. For text, RNNs/Transformers are better suited as they can capture sequential dependencies and long-range relationships.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress and Actions -->
+        <div class="learning-actions">
+            <div class="progress-indicator">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">0% Complete</span>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="previousLevel()">
+                    <i class="fas fa-arrow-left"></i> Intermediate
+                </button>
+                <button class="btn btn-primary" id="markCompleteBtn" onclick="markComplete()">
+                    <i class="fas fa-check"></i> Mark Complete
+                </button>
+                <button class="btn btn-secondary" onclick="nextLevel()" id="nextLevelBtn" disabled>
+                    <i class="fas fa-trophy"></i> Leaderboard
+                </button>
             </div>
         </div>
     </div>

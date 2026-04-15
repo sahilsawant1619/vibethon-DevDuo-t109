@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Main Content (no sidebar - base.html already has it) -->
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="welcome-section">
+        <h1>AI-Powered Quiz Zone</h1>
+        <p>Test your ML knowledge with AI-generated quizzes and earn points!</p>
+    </div>
+
+    <!-- Quiz Container -->
+    <div class="quiz-container">
+        <!-- Topic Selection -->
+        <div class="topic-section" id="topicSection">
+            <div class="section-header">
+                <h3>Choose Your Quiz Topic</h3>
+                <p>Select a machine learning topic to generate a personalized quiz</p>
+            </div>
+            
+            <div class="topic-selector">
+                <div class="topic-grid">
+                    <div class="topic-card" data-topic="Linear Regression">
+                        <div class="topic-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="topic-content">
+                            <h4>Linear Regression</h4>
+                            <p>Test your knowledge of regression analysis, coefficients, and predictions</p>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card" data-topic="Neural Networks">
+                        <div class="topic-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="topic-content">
+                            <h4>Neural Networks</h4>
+                            <p>Challenge yourself with deep learning, layers, and backpropagation</p>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card" data-topic="Overfitting">
+                        <div class="topic-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="topic-content">
+                            <h4>Overfitting</h4>
+                            <p>Explore bias-variance tradeoff, regularization, and model complexity</p>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card" data-topic="Decision Trees">
+                        <div class="topic-icon">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <div class="topic-content">
+                            <h4>Decision Trees</h4>
+                            <p>Master tree algorithms, splitting criteria, and ensemble methods</p>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card" data-topic="Clustering">
+                        <div class="topic-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="topic-content">
+                            <h4>Clustering</h4>
+                            <p>Dive into unsupervised learning, K-means, and hierarchical clustering</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="topic-actions">
+                    <button class="btn btn-primary" id="generateQuizBtn" disabled>
+                        <i class="fas fa-magic"></i> Generate Quiz
+                    </button>
+                    <div class="selected-topic" id="selectedTopic">
+                        <span class="topic-label">Selected Topic:</span>
+                        <span class="topic-value">None</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Questions -->
+        <div class="quiz-section" id="quizSection" style="display: none;">
+            <div class="section-header">
+                <h3>Quiz Questions</h3>
+                <div class="quiz-info">
+                    <span class="topic-display" id="topicDisplay"></span>
+                    <span class="timer" id="timer">Time: 00:00</span>
+                </div>
+            </div>
+            
+            <div class="questions-container" id="questionsContainer">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+            
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="backToTopicsBtn">
+                    <i class="fas fa-arrow-left"></i> Back to Topics
+                </button>
+                <button class="btn btn-primary" id="submitQuizBtn">
+                    <i class="fas fa-check"></i> Submit Quiz
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Results -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="section-header">
+                <h3>Quiz Results</h3>
+                <div class="score-summary">
+                    <span class="score-display" id="scoreDisplay"></span>
+                    <span class="percentage-display" id="percentageDisplay"></span>
+                </div>
+            </div>
+            
+            <div class="results-content">
+                <div class="performance-analysis" id="performanceAnalysis">
+                    <!-- Performance analysis will be inserted here -->
+                </div>
+                
+                <div class="answers-review" id="answersReview">
+                    <!-- Correct answers review will be inserted here -->
+                </div>
+                
+                <div class="achievements" id="achievements">
+                    <!-- Achievements and badges will be inserted here -->
+                </div>
+                
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="newQuizBtn">
+                        <i class="fas fa-redo"></i> Take Another Quiz
+                    </button>
+                    <button class="btn btn-secondary" id="backToDashboardBtn">
+                        <i class="fas fa-home"></i> Back to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Statistics -->
+        <div class="stats-section">
+            <div class="section-header">
+                <h3>Quiz Statistics</h3>
+                <button class="btn btn-outline-secondary btn-sm" id="resetStatsBtn">
+                    <i class="fas fa-redo"></i> Reset Stats
+                </button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon quiz-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="totalQuizzes">0</div>
+                        <div class="stat-label">Total Quizzes</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon correct-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="totalCorrect">0</div>
+                        <div class="stat-label">Correct Answers</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon accuracy-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="avgScore">0%</div>
+                        <div class="stat-label">Average Score</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon points-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="quizPoints">0</div>
+                        <div class="stat-label">Quiz Points</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="info-section">
+            <div class="section-header">
+                <h3>How It Works</h3>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>AI-Generated Questions</h4>
+                        <p>Questions are generated by AI (Gemini/Grok) tailored to your selected topic</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Points System</h4>
+                        <p>Earn 10 points per correct answer (max 50 points per quiz)</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Badge Awards</h4>
+                        <p>Unlock badges like "Quiz Master" by scoring 80%+ on multiple quizzes</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Performance Tracking</h4>
+                        <p>Track your progress, accuracy, and improvement over time</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quiz JavaScript -->
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}

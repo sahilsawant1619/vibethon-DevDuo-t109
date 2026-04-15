@@ -1,42 +1,400 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="learning-module">
-                <div class="coming-soon">
-                    <div class="icon-container">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <h1>Intermediate Module</h1>
-                    <p>This module is coming soon!</p>
-                    <div class="features-preview">
-                        <h3>What's coming in this module:</h3>
-                        <ul>
-                            <li>Supervised vs Unsupervised Learning</li>
-                            <li>Model Evaluation Metrics</li>
-                            <li>Overfitting and Underfitting</li>
-                            <li>Cross-Validation Techniques</li>
-                            <li>Feature Engineering</li>
-                        </ul>
-                    </div>
-                    <div class="unlock-info">
-                        <p><i class="fas fa-lock"></i> Complete the Beginner module quiz to unlock this content</p>
-                    </div>
-                    <div class="action-buttons">
-                        <a href="/learn/beginner" class="btn btn-primary">
-                            <i class="fas fa-arrow-left"></i>
-                            Back to Beginner
-                        </a>
+<div class="dashboard-container">
+    <div class="welcome-section">
+        <h1>Intermediate Machine Learning</h1>
+        <p>Master advanced concepts: Model Evaluation, Cross-Validation, and Bias-Variance Tradeoff</p>
+    </div>
+
+    <div class="learning-content">
+        <!-- Navigation Tabs -->
+        <div class="learning-tabs">
+            <button class="tab-btn active" onclick="showTab('evaluation')">
+                <i class="fas fa-chart-line"></i> Model Evaluation
+            </button>
+            <button class="tab-btn" onclick="showTab('crossvalidation')">
+                <i class="fas fa-sync"></i> Cross-Validation
+            </button>
+            <button class="tab-btn" onclick="showTab('biasvariance')">
+                <i class="fas fa-balance-scale"></i> Bias-Variance
+            </button>
+        </div>
+
+        <!-- Model Evaluation Tab -->
+        <div id="evaluation" class="tab-content active">
+            <div class="content-section">
+                <h2>Model Evaluation & Overfitting</h2>
+                <p>Learn how to properly evaluate your models and detect overfitting.</p>
+                
+                <div class="concept-card">
+                    <h3>Understanding Overfitting</h3>
+                    <p>Overfitting occurs when a model learns the training data too well, including noise and random fluctuations. This leads to poor performance on new, unseen data.</p>
+                    
+                    <div class="code-example">
+                        <h4>Example: Detecting Overfitting</h4>
+                        <pre><code>import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Generate sample data
+np.random.seed(42)
+X = np.random.rand(100, 1) * 10
+y = 2 * X + 1 + np.random.randn(100, 1) * 2
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+print(f"Training R²: {train_score:.3f}")
+print(f"Test R²: {test_score:.3f}")
+
+# Check for overfitting
+if train_score - test_score > 0.1:
+    print("Warning: Model may be overfitting!")
+else:
+    print("Model appears to be well-fitted")</code></pre>
                     </div>
                 </div>
+
+                <div class="concept-card">
+                    <h3>Key Evaluation Metrics</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <h4>R² (R-squared)</h4>
+                            <p>Proportion of variance in dependent variable predictable from independent variables.</p>
+                            <code>R² = 1 - (SS_res / SS_tot)</code>
+                        </div>
+                        <div class="metric-item">
+                            <h4>Mean Squared Error (MSE)</h4>
+                            <p>Average of squared differences between predicted and actual values.</p>
+                            <code>MSE = (1/n) * sum(y_true - y_pred)²</code>
+                        </div>
+                        <div class="metric-item">
+                            <h4>Mean Absolute Error (MAE)</h4>
+                            <p>Average of absolute differences between predicted and actual values.</p>
+                            <code>MAE = (1/n) * sum(|y_true - y_pred|)</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="practice-section">
+                    <h3>Practice Exercise</h3>
+                    <p>Try this exercise to test your understanding:</p>
+                    <div class="exercise-box">
+                        <p><strong>Exercise:</strong> Given a model with training accuracy of 95% and test accuracy of 70%, is this model overfitting? What would you recommend?</p>
+                        <button class="btn btn-secondary" onclick="toggleHint('hint1')">Show Hint</button>
+                        <div id="hint1" class="hint" style="display: none;">
+                            <p>Yes, this is classic overfitting. The large gap (25%) between training and test performance indicates the model has memorized training data. Consider: simplifying the model, adding regularization, or getting more training data.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cross-Validation Tab -->
+        <div id="crossvalidation" class="tab-content">
+            <div class="content-section">
+                <h2>Cross-Validation Techniques</h2>
+                <p>Learn robust methods to evaluate model performance and avoid overfitting.</p>
+                
+                <div class="concept-card">
+                    <h3>What is Cross-Validation?</h3>
+                    <p>Cross-validation is a technique to assess how a model will generalize to an independent dataset. It involves partitioning data into complementary subsets.</p>
+                    
+                    <div class="cv-types">
+                        <div class="cv-type">
+                            <h4>K-Fold Cross-Validation</h4>
+                            <p>Data is divided into k folds, model is trained on k-1 folds and tested on the remaining fold. This is repeated k times.</p>
+                            <div class="code-example">
+                                <pre><code>from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestClassifier
+
+# Create model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+
+# Perform 5-fold cross-validation
+cv_scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
+
+print(f"CV Scores: {cv_scores}")
+print(f"Mean CV Score: {cv_scores.mean():.3f} (+/- {cv_scores.std() * 2:.3f})")
+
+# Interpret results
+if cv_scores.std() > 0.1:
+    print("High variance in CV scores - model may be unstable")
+else:
+    print("Consistent performance across folds") </code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="cv-type">
+                            <h4>Stratified K-Fold</h4>
+                            <p>Ensures each fold has the same proportion of samples from each class. Essential for imbalanced datasets.</p>
+                            <div class="code-example">
+                                <pre><code>from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import accuracy_score
+
+# Create stratified folds
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+scores = []
+for train_idx, test_idx in skf.split(X, y):
+    X_train, X_test = X[train_idx], X[test_idx]
+    y_train, y_test = y[train_idx], y[test_idx]
+    
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    scores.append(accuracy_score(y_test, y_pred))
+
+print(f"Stratified CV Scores: {scores}")</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>When to Use Cross-Validation?</h3>
+                    <div class="use-cases">
+                        <div class="use-case">
+                            <h4>Small Datasets</h4>
+                            <p>When you have limited data, CV maximizes the use of available data for both training and testing.</p>
+                        </div>
+                        <div class="use-case">
+                            <h4>Hyperparameter Tuning</h4>
+                            <p>Use CV to find optimal hyperparameters without overfitting to a specific train-test split.</p>
+                        </div>
+                        <div class="use-case">
+                            <h4>Model Selection</h4>
+                            <p>Compare different models using the same CV procedure for fair comparison.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="practice-section">
+                    <h3>Practice Exercise</h3>
+                    <div class="exercise-box">
+                        <p><strong>Exercise:</strong> You have a dataset with 1000 samples. Should you use 10-fold or 5-fold cross-validation? Why?</p>
+                        <button class="btn btn-secondary" onclick="toggleHint('hint2')">Show Hint</button>
+                        <div id="hint2" class="hint" style="display: none;">
+                            <p>For 1000 samples, 5-fold is often preferred. 10-fold would give smaller test sets (100 samples each) which might not be representative. 5-fold gives 200 samples per test fold, providing more reliable performance estimates while still using 80% of data for training.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bias-Variance Tab -->
+        <div id="biasvariance" class="tab-content">
+            <div class="content-section">
+                <h2>Bias-Variance Tradeoff</h2>
+                <p>Understanding the fundamental tradeoff in machine learning model complexity.</p>
+                
+                <div class="concept-card">
+                    <h3>The Bias-Variance Decomposition</h3>
+                    <p>The total error in a model can be decomposed into three components: Bias² + Variance + Irreducible Error.</p>
+                    
+                    <div class="bias-variance-visual">
+                        <div class="error-component">
+                            <h4>Bias Error</h4>
+                            <p>Error from erroneous assumptions in the learning algorithm. High bias can cause underfitting.</p>
+                            <div class="example">
+                                <strong>High Bias:</strong> Linear model trying to fit non-linear data
+                            </div>
+                        </div>
+                        
+                        <div class="error-component">
+                            <h4>Variance Error</h4>
+                            <p>Error from sensitivity to small fluctuations in the training set. High variance can cause overfitting.</p>
+                            <div class="example">
+                                <strong>High Variance:</strong> Complex polynomial model fitting noise
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>Finding the Sweet Spot</h3>
+                    <p>The goal is to find a model complexity that balances bias and variance to minimize total error.</p>
+                    
+                    <div class="code-example">
+                        <h4>Example: Bias-Variance Analysis</h4>
+                        <pre><code>import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import Pipeline
+
+# Generate non-linear data
+np.random.seed(42)
+X = np.random.rand(50, 1) * 10
+y = np.sin(X) + np.random.randn(50, 1) * 0.1
+
+# Test different polynomial degrees
+degrees = [1, 3, 5, 10]
+train_errors = []
+test_errors = []
+
+for degree in degrees:
+    # Create polynomial features
+    model = Pipeline([
+        ('poly', PolynomialFeatures(degree=degree)),
+        ('linear', LinearRegression())
+    ])
+    
+    # Train and evaluate
+    model.fit(X_train, y_train)
+    train_pred = model.predict(X_train)
+    test_pred = model.predict(X_test)
+    
+    train_errors.append(mean_squared_error(y_train, train_pred))
+    test_errors.append(mean_squared_error(y_test, test_pred))
+
+# Plot results (conceptual)
+print("Degree 1: High Bias, Low Variance (Underfitting)")
+print("Degree 3: Good Balance")
+print("Degree 5: Slight Overfitting")
+print("Degree 10: Low Bias, High Variance (Overfitting)")</code></pre>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>Strategies to Manage Bias-Variance</h3>
+                    <div class="strategies-grid">
+                        <div class="strategy">
+                            <h4>Reduce High Bias</h4>
+                            <ul>
+                                <li>Use more complex model</li>
+                                <li>Add more features</li>
+                                <li>Decrease regularization</li>
+                                <li>Use ensemble methods</li>
+                            </ul>
+                        </div>
+                        <div class="strategy">
+                            <h4>Reduce High Variance</h4>
+                            <ul>
+                                <li>Get more training data</li>
+                                <li>Use simpler model</li>
+                                <li>Add regularization</li>
+                                <li>Use feature selection</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="practice-section">
+                    <h3>Practice Exercise</h3>
+                    <div class="exercise-box">
+                        <p><strong>Exercise:</strong> A model has low training error but high test error. Is this a bias or variance problem? What would you do to fix it?</p>
+                        <button class="btn btn-secondary" onclick="toggleHint('hint3')">Show Hint</button>
+                        <div id="hint3" class="hint" style="display: none;">
+                            <p>This is a variance problem (overfitting). The model has low bias (fits training well) but high variance (poor generalization). Solutions: simplify the model, add regularization (L1/L2), get more training data, or use dropout for neural networks.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress and Actions -->
+        <div class="learning-actions">
+            <div class="progress-indicator">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">0% Complete</span>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="previousLevel()">
+                    <i class="fas fa-arrow-left"></i> Beginner
+                </button>
+                <button class="btn btn-primary" id="markCompleteBtn" onclick="markComplete()">
+                    <i class="fas fa-check"></i> Mark Complete
+                </button>
+                <button class="btn btn-secondary" onclick="nextLevel()" id="nextLevelBtn" disabled>
+                    Advanced <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+function showTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Remove active class from all buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected tab
+    document.getElementById(tabName).classList.add('active');
+    
+    // Add active class to clicked button
+    event.target.classList.add('active');
+    
+    // Update progress
+    updateProgress();
+}
+
+function toggleHint(hintId) {
+    const hint = document.getElementById(hintId);
+    hint.style.display = hint.style.display === 'none' ? 'block' : 'none';
+}
+
+function updateProgress() {
+    const activeTabs = document.querySelectorAll('.tab-content.active').length;
+    const totalTabs = document.querySelectorAll('.tab-content').length;
+    const progress = (activeTabs / totalTabs) * 100;
+    
+    document.querySelector('.progress-fill').style.width = progress + '%';
+    document.querySelector('.progress-text').textContent = Math.round(progress) + '% Complete';
+}
+
+function markComplete() {
+    // Award points and unlock next level
+    fetch('/update-points', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action: 'module_complete', module: 'intermediate'})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('markCompleteBtn').disabled = true;
+            document.getElementById('markCompleteBtn').innerHTML = '<i class="fas fa-check"></i> Completed';
+            document.getElementById('nextLevelBtn').disabled = false;
+            alert('Intermediate module completed! +20 points awarded.');
+        }
+    });
+}
+
+function previousLevel() {
+    window.location.href = '/learn/beginner';
+}
+
+function nextLevel() {
+    window.location.href = '/learn/advanced';
+}
+
+// Initialize progress
+updateProgress();
+</script>
+
 <style>
+.learning-content {
+    max-width: 1200px;
 .learning-module {
     background: white;
     border-radius: 15px;

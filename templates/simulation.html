@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Main Content (no sidebar - base.html already has it) -->
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="welcome-section">
+        <h1>Spam Classifier Simulation</h1>
+        <p>Experience real-world ML: Classify messages as spam or ham with AI explanations</p>
+    </div>
+
+    <!-- Simulation Container -->
+    <div class="simulation-container">
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="section-header">
+                <h3>Message Input</h3>
+                <div class="input-actions">
+                    <button class="btn btn-secondary btn-sm" id="clearBtn">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="exampleBtn">
+                        <i class="fas fa-lightbulb"></i> Examples
+                    </button>
+                </div>
+            </div>
+            
+            <div class="message-input">
+                <textarea 
+                    id="messageText" 
+                    class="message-textarea" 
+                    placeholder="Enter a message to classify as spam or ham..."
+                    rows="4"
+                ></textarea>
+                <div class="input-footer">
+                    <span class="char-count" id="charCount">0 / 500 characters</span>
+                    <button class="btn btn-primary" id="classifyBtn">
+                        <i class="fas fa-search"></i> Classify Message
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="section-header">
+                <h3>Classification Results</h3>
+                <button class="btn btn-outline-secondary btn-sm" id="hideResultsBtn">
+                    <i class="fas fa-eye-slash"></i> Hide
+                </button>
+            </div>
+            
+            <div class="results-content">
+                <!-- Prediction Badge -->
+                <div class="prediction-result">
+                    <div class="prediction-badge" id="predictionBadge">
+                        <i class="fas fa-envelope"></i>
+                        <span id="predictionText">Analyzing...</span>
+                    </div>
+                    <div class="confidence-display">
+                        <span class="confidence-label">Confidence:</span>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="confidenceFill"></div>
+                        </div>
+                        <span class="confidence-value" id="confidenceValue">0%</span>
+                    </div>
+                </div>
+
+                <!-- Keywords Found -->
+                <div class="keywords-section">
+                    <h4>Keywords Found</h4>
+                    <div class="keywords-list" id="keywordsList">
+                        <!-- Keywords will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- AI Explanation -->
+                <div class="explanation-section">
+                    <h4>AI Explanation</h4>
+                    <div class="explanation-content" id="explanationContent">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Generating AI explanation...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="stats-section">
+            <div class="section-header">
+                <h3>Classification Statistics</h3>
+                <button class="btn btn-outline-secondary btn-sm" id="resetStatsBtn">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon spam-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="spamCount">0</div>
+                        <div class="stat-label">Spam Messages</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon ham-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="hamCount">0</div>
+                        <div class="stat-label">Ham Messages</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon total-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="totalCount">0</div>
+                        <div class="stat-label">Total Messages</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon accuracy-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="avgConfidence">0%</div>
+                        <div class="stat-label">Avg Confidence</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Examples Section -->
+        <div class="examples-section" id="examplesSection" style="display: none;">
+            <div class="section-header">
+                <h3>Example Messages</h3>
+                <button class="btn btn-outline-secondary btn-sm" id="hideExamplesBtn">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+            
+            <div class="examples-grid">
+                <div class="example-card spam-example" data-message="Win a free iPhone now! Click here to claim your prize!">
+                    <div class="example-header">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Spam Example</span>
+                    </div>
+                    <div class="example-text">Win a free iPhone now! Click here to claim your prize!</div>
+                    <button class="btn btn-sm btn-outline-primary use-example">
+                        <i class="fas fa-arrow-up"></i> Use This
+                    </button>
+                </div>
+                
+                <div class="example-card ham-example" data-message="Meeting tomorrow at 10 AM in conference room B">
+                    <div class="example-header">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Ham Example</span>
+                    </div>
+                    <div class="example-text">Meeting tomorrow at 10 AM in conference room B</div>
+                    <button class="btn btn-sm btn-outline-primary use-example">
+                        <i class="fas fa-arrow-up"></i> Use This
+                    </button>
+                </div>
+                
+                <div class="example-card spam-example" data-message="URGENT: Congratulations! You've won $1,000,000 in our lottery!">
+                    <div class="example-header">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Spam Example</span>
+                    </div>
+                    <div class="example-text">URGENT: Congratulations! You've won $1,000,000 in our lottery!</div>
+                    <button class="btn btn-sm btn-outline-primary use-example">
+                        <i class="fas fa-arrow-up"></i> Use This
+                    </button>
+                </div>
+                
+                <div class="example-card ham-example" data-message="Hi, how are you doing today?">
+                    <div class="example-header">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Ham Example</span>
+                    </div>
+                    <div class="example-text">Hi, how are you doing today?</div>
+                    <button class="btn btn-sm btn-outline-primary use-example">
+                        <i class="fas fa-arrow-up"></i> Use This
+                    </button>
+                </div>
+                
+                <div class="example-card spam-example" data-message="Limited time offer: Get 50% off on all products!">
+                    <div class="example-header">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Spam Example</span>
+                    </div>
+                    <div class="example-text">Limited time offer: Get 50% off on all products!</div>
+                    <button class="btn btn-sm btn-outline-primary use-example">
+                        <i class="fas fa-arrow-up"></i> Use This
+                    </button>
+                </div>
+                
+                <div class="example-card ham-example" data-message="Can you send me the report by end of day?">
+                    <div class="example-header">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Ham Example</span>
+                    </div>
+                    <div class="example-text">Can you send me the report by end of day?</div>
+                    <button class="btn btn-sm btn-outline-primary use-example">
+                        <i class="fas fa-arrow-up"></i> Use This
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="info-section">
+            <div class="section-header">
+                <h3>How It Works</h3>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Keyword Analysis</h4>
+                        <p>The classifier scans for spam-related keywords like "free", "win", "urgent", etc.</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Confidence Scoring</h4>
+                        <p>Based on keyword count, it calculates confidence levels for predictions.</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>AI Explanation</h4>
+                        <p>AI provides detailed explanations for why a message is classified as spam or ham.</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Real-time Statistics</h4>
+                        <p>Track your classification accuracy and patterns over time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Simulation JavaScript -->
+<script src="{{ url_for('static', filename='js/simulation.js') }}"></script>
+{% endblock %}

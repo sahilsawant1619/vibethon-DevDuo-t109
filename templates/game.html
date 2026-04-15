@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Main Content (no sidebar - base.html already has it) -->
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="welcome-section">
+        <h1>Decision Tree Adventure</h1>
+        <p>Learn about decision trees by making choices as an ML engineer!</p>
+    </div>
+
+    <!-- Game Container -->
+    <div class="game-container">
+        <!-- Score Display -->
+        <div class="score-display">
+            <div class="score-item">
+                <span class="score-label">Current Score:</span>
+                <span class="score-value" id="currentScore">0</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Best Score:</span>
+                <span class="score-value" id="bestScore">0</span>
+            </div>
+        </div>
+
+        <!-- Story Container -->
+        <div class="story-container">
+            <div class="story-header">
+                <h2 id="nodeTitle">Decision Tree Adventure</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div class="story-content">
+                <div class="story-text" id="storyText">
+                    You are an ML engineer building a decision tree to predict customer churn for a telecommunications company. Your goal is to make the best choices at each decision node to create an accurate model.
+                </div>
+                
+                <!-- Choices Container -->
+                <div class="choices-container" id="choicesContainer">
+                    <!-- Choices will be dynamically inserted here -->
+                </div>
+                
+                <!-- Game Over Screen -->
+                <div class="game-over-screen" id="gameOverScreen" style="display: none;">
+                    <div class="game-over-content">
+                        <h3>Adventure Complete!</h3>
+                        <div class="final-score">
+                            <p>Your Final Score: <span id="finalScore">0</span>/100</p>
+                            <div class="score-rating" id="scoreRating"></div>
+                        </div>
+                        <div class="educational-content" id="educationalContent">
+                            <!-- Educational explanation will be inserted here -->
+                        </div>
+                        <div class="game-over-actions">
+                            <button class="btn btn-primary" id="playAgainBtn">
+                                <i class="fas fa-redo"></i> Play Again
+                            </button>
+                            <button class="btn btn-secondary" id="backToDashboardBtn">
+                                <i class="fas fa-home"></i> Back to Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions Panel -->
+        <div class="instructions-panel">
+            <h3>How to Play</h3>
+            <ul>
+                <li>Read the scenario carefully</li>
+                <li>Choose the best option for your decision tree</li>
+                <li>Each choice affects your score</li>
+                <li>Learn about decision tree concepts</li>
+                <li>Try to get the highest score possible!</li>
+            </ul>
+        </div>
+
+        <!-- Tips Panel -->
+        <div class="tips-panel">
+            <h3>Decision Tree Tips</h3>
+            <div class="tip-item">
+                <i class="fas fa-lightbulb"></i>
+                <span>Choose features that best separate the data</span>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Consider information gain and Gini impurity</span>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-balance-scale"></i>
+                <span>Balance between model complexity and accuracy</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Game CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+<!-- Game JavaScript -->
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}
