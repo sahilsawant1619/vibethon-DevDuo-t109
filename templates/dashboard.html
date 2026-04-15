@@ -157,7 +157,7 @@
             </div>
         </div>
 
-        <!-- Recent Activity -->
+        <!-- Recent Activity Section -->
         <div class="activity-section">
             <h3>Recent Activity</h3>
             <div class="activity-list">
@@ -186,6 +186,10 @@
         <div class="quick-actions">
             <h3>Quick Actions</h3>
             <div class="action-buttons">
+                <a href="/learn/beginner" class="action-btn">
+                    <i class="fas fa-book"></i>
+                    <span>Start Learning</span>
+                </a>
                 <a href="/coding" class="action-btn">
                     <i class="fas fa-code"></i>
                     <span>Start Coding</span>
@@ -207,5 +211,6 @@
     </div>
 </div>
 
+<!-- Dashboard JavaScript -->
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

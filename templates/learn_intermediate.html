@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="learning-module">
+                <div class="coming-soon">
+                    <div class="icon-container">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h1>Intermediate Module</h1>
+                    <p>This module is coming soon!</p>
+                    <div class="features-preview">
+                        <h3>What's coming in this module:</h3>
+                        <ul>
+                            <li>Supervised vs Unsupervised Learning</li>
+                            <li>Model Evaluation Metrics</li>
+                            <li>Overfitting and Underfitting</li>
+                            <li>Cross-Validation Techniques</li>
+                            <li>Feature Engineering</li>
+                        </ul>
+                    </div>
+                    <div class="unlock-info">
+                        <p><i class="fas fa-lock"></i> Complete the Beginner module quiz to unlock this content</p>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="/learn/beginner" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Beginner
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.learning-module {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+.coming-soon {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.icon-container {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+}
+
+.icon-container i {
+    font-size: 3rem;
+    color: white;
+}
+
+.coming-soon h1 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.coming-soon p {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.features-preview {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.features-preview h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.features-preview ul {
+    list-style: none;
+    padding: 0;
+}
+
+.features-preview li {
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.features-preview li:last-child {
+    border-bottom: none;
+}
+
+.features-preview li:before {
+    content: "?";
+    color: #667eea;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.unlock-info {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+    color: #856404;
+}
+
+.unlock-info i {
+    margin-right: 8px;
+}
+
+.action-buttons {
+    margin-top: 30px;
+}
+
+.action-buttons .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

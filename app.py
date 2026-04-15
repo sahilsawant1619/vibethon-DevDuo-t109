@@ -33,15 +33,17 @@ def index():
 def dashboard():
     # Get user stats
     user_stats = {
-        'points': current_user.points,
-        'level': current_user.level,
-        'streak': current_user.streak,
-        'badges': current_user.get_badges_list(),
-        'fullname': current_user.fullname,
-        'email': current_user.email
+        'points': current_user.points if current_user.points else 0,
+        'level': current_user.level if current_user.level else 'Beginner',
+        'streak': current_user.streak if current_user.streak else 0,
+        'badges': current_user.get_badges_list() if hasattr(current_user, 'get_badges_list') else [],
+        'fullname': current_user.fullname if current_user.fullname else 'User',
+        'points_to_next_level': 0,
+        'next_level': 'Intermediate',
+        'progress_percentage': 0
     }
     
-    # Calculate level progress (example thresholds)
+    # Calculate level progress
     level_thresholds = {
         'Beginner': 0,
         'Intermediate': 100,
@@ -49,10 +51,24 @@ def dashboard():
         'Expert': 600
     }
     
-    current_level_threshold = level_thresholds.get(current_user.level, 0)
-    next_level = 'Expert'  # Default for highest level
-    next_level_threshold = 1000  # Default for highest level
+    current_level = user_stats['level']
+    current_points = user_stats['points']
     
+    if current_level in level_thresholds:
+        current_threshold = level_thresholds[current_level]
+        # Find next level
+        levels = list(level_thresholds.keys())
+        current_index = levels.index(current_level)
+        if current_index < len(levels) - 1:
+            next_level = levels[current_index + 1]
+            next_threshold = level_thresholds[next_level]
+            user_stats['next_level'] = next_level
+            user_stats['points_to_next_level'] = next_threshold - current_points
+            user_stats['progress_percentage'] = min(100, max(0, ((current_points - current_threshold) / (next_threshold - current_threshold) * 100)) if next_threshold > current_threshold else 0)
+        else:
+            user_stats['next_level'] = 'Expert'
+            user_stats['points_to_next_level'] = 0
+            user_stats['progress_percentage'] = 100
     # Find next level
     levels = ['Beginner', 'Intermediate', 'Advanced', 'Expert']
     current_index = levels.index(current_user.level) if current_user.level in levels else 0
@@ -71,9 +87,21 @@ def dashboard():
     
     return render_template('dashboard.html', stats=user_stats)
 
-@app.route('/learn/beginner')
-def learn_beginner():
-    return render_template('learn.html')
+@app.route('/learn/<level>')
+def learn_level(level):
+    """Handle learning module routes for different levels"""
+    valid_levels = ['beginner', 'intermediate', 'advanced']
+    
+    if level not in valid_levels:
+        return "Invalid learning level", 404
+    
+    template_map = {
+        'beginner': 'learn_beginner.html',
+        'intermediate': 'learn_intermediate.html',
+        'advanced': 'learn_advanced.html'
+    }
+    
+    return render_template(template_map[level])
 
 @app.route('/coding')
 def coding():
